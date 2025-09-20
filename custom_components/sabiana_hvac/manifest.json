@@ -7,6 +7,9 @@
   "codeowners": ["@edoeel"],
   "config_flow": true,
   "dependencies": [],
-  "requirements": [],
+  "requirements": [
+    "httpx>=0.24.0",
+    "voluptuous>=0.13.0"
+  ],
   "iot_class": "cloud_polling"
 }
