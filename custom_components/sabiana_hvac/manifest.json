@@ -1,0 +1,12 @@
+{
+  "domain": "sabiana_hvac",
+  "name": "Sabiana HVAC",
+  "version": "0.0.1",
+  "documentation": "https://github.com/edoeel/home-assistant-sabiana-hvac",
+  "issue_tracker": "https://github.com/edoeel/home-assistant-sabiana-hvac/issues",
+  "codeowners": ["@edoeel"],
+  "config_flow": true,
+  "dependencies": [],
+  "requirements": [],
+  "iot_class": "cloud_polling"
+}
