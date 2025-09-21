@@ -1,3 +1,14 @@
+from homeassistant.const import (
+    FAN_AUTO,
+    FAN_HIGH,
+    FAN_LOW,
+    FAN_MEDIUM,
+    PRESET_SLEEP,
+)
+from homeassistant.components.climate import (
+    HVACMode,
+)
+
 DOMAIN = "sabiana_hvac"
 
 BASE_URL = "https://be-standard.sabianawm.cloud"
@@ -10,3 +21,24 @@ ERROR_API_ERROR = "api_error"
 ERROR_UNKNOWN = "unknown_error"
 
 CONF_TOKEN = "token"
+
+HVAC_MODE_MAP = {
+    HVACMode.COOL: "0",
+    HVACMode.HEAT: "1",
+    HVACMode.FAN_ONLY: "3",
+    HVACMode.OFF: "4",
+}
+FAN_MODE_MAP = {
+    FAN_LOW: "1",
+    FAN_MEDIUM: "2",
+    FAN_HIGH: "3",
+    FAN_AUTO: "4",
+}
+SWING_MODE_MAP = {
+    "Vertical": "3",
+    "Horizontal": "1",
+    "45 Degrees": "2",
+    "Swing": "4",
+}
+
+COMMAND_PART_11_19_FIXED = "01FFFF000"
