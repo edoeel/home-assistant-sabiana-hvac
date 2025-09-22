@@ -9,17 +9,18 @@ from homeassistant.components.climate import (
     ClimateEntity,
     ClimateEntityFeature,
     HVACMode,
-    SwingMode,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     ATTR_TEMPERATURE,
+    UnitOfTemperature,
+)
+from homeassistant.components.climate.const import (
     FAN_AUTO,
     FAN_HIGH,
     FAN_LOW,
     FAN_MEDIUM,
     PRESET_SLEEP,
-    UnitOfTemperature,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -29,6 +30,7 @@ from . import api
 from .api import SabianaApiAuthError, SabianaApiClientError
 from .const import (
     DOMAIN,
+    CONF_TOKEN,
     HVAC_MODE_MAP,
     FAN_MODE_MAP,
     SWING_MODE_MAP,
@@ -46,7 +48,7 @@ async def async_setup_entry(
     entry_data = hass.data[DOMAIN][entry.entry_id]
     entities = [
         SabianaHvacClimateEntity(
-            entry_data["session"], entry_data["token"], device
+            entry_data["session"], entry_data[CONF_TOKEN], device
         )
         for device in entry_data["devices"]
     ]

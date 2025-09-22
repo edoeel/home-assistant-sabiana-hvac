@@ -47,6 +47,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {
         "session": session,
+        "token": token,
         "devices": devices,
     }
     _LOGGER.debug("Stored data for entry %s: %d devices", entry.entry_id, len(devices))

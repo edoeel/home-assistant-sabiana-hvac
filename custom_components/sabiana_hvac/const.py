@@ -1,9 +1,8 @@
-from homeassistant.const import (
+from homeassistant.components.climate.const import (
     FAN_AUTO,
     FAN_HIGH,
     FAN_LOW,
     FAN_MEDIUM,
-    PRESET_SLEEP,
 )
 from homeassistant.components.climate import (
     HVACMode,
