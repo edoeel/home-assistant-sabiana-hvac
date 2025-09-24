@@ -39,5 +39,3 @@ SWING_MODE_MAP = {
     "45 Degrees": "2",
     "Swing": "4",
 }
-
-COMMAND_PART_11_19_FIXED = "01FFFF000"

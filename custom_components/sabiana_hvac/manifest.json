@@ -9,7 +9,8 @@
   "issue_tracker": "https://github.com/edoeel/home-assistant-sabiana-hvac/issues",
   "requirements": [
     "httpx>=0.24.0",
-    "voluptuous>=0.13.0"
+    "voluptuous>=0.13.0",
+    "httpx-retries==0.2.0"
   ],
   "version": "0.0.1"
 }

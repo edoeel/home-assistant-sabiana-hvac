@@ -20,6 +20,7 @@ from homeassistant.components.climate.const import (
     FAN_HIGH,
     FAN_LOW,
     FAN_MEDIUM,
+    PRESET_NONE,
     PRESET_SLEEP,
 )
 from homeassistant.core import HomeAssistant
@@ -34,7 +35,6 @@ from .const import (
     HVAC_MODE_MAP,
     FAN_MODE_MAP,
     SWING_MODE_MAP,
-    COMMAND_PART_11_19_FIXED,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -60,7 +60,7 @@ class SabianaHvacClimateEntity(ClimateEntity, RestoreEntity):
     _attr_hvac_modes = [HVACMode.OFF, HVACMode.COOL, HVACMode.HEAT, HVACMode.FAN_ONLY]
     _attr_fan_modes = [FAN_LOW, FAN_MEDIUM, FAN_HIGH, FAN_AUTO]
     _attr_swing_modes = ["Vertical", "Horizontal", "45 Degrees", "Swing"]
-    _attr_preset_modes = [PRESET_SLEEP]
+    _attr_preset_modes = [PRESET_SLEEP, PRESET_NONE]
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_min_temp = 10.0
     _attr_max_temp = 30.0
@@ -108,21 +108,18 @@ class SabianaHvacClimateEntity(ClimateEntity, RestoreEntity):
         return "2" if preset_mode == PRESET_SLEEP else "0"
 
     def _build_command_payload(self) -> str:
-        char1 = "0"
-        char2 = self._map_fan_mode_to_sabiana_char(self.fan_mode)
-        char3 = "0"
-        char4 = self._map_hvac_mode_to_sabiana_char(self.hvac_mode)
-        chars5_8 = self._celsius_to_hex(self.target_temperature)
-        char9 = "0"
-        char10 = self._map_swing_mode_to_sabiana_char(self.swing_mode)
-        chars11_19 = COMMAND_PART_11_19_FIXED
-        char20 = self._map_preset_mode_to_sabiana_char(self.preset_mode)
+        fan = self._map_fan_mode_to_sabiana_char(self.fan_mode)
+        mode = self._map_hvac_mode_to_sabiana_char(self.hvac_mode)
+        temperature = self._celsius_to_hex(self.target_temperature)
+        swing = self._map_swing_mode_to_sabiana_char(self.swing_mode)
+        preset = self._map_preset_mode_to_sabiana_char(self.preset_mode)
 
-        return f"{char1}{char2}{char3}{char4}{chars5_8}{char9}{char10}{chars11_19}{char20}"
+        return f"0{fan}0{mode}{temperature}0{swing}01FFFF000{preset}"
 
 
     async def _async_execute_command(self) -> None:
         command_payload = self._build_command_payload()
+
         try:
             await api.async_send_command(
                 self._session, self._token, self._device.id, command_payload
@@ -131,16 +128,16 @@ class SabianaHvacClimateEntity(ClimateEntity, RestoreEntity):
         except SabianaApiAuthError as err:
             _LOGGER.error(
                 "Authentication error for %s: %s. Please re-configure the integration.",
-                self.name, err
+                self.name, str(err)
             )
         except SabianaApiClientError as err:
             _LOGGER.error(
-                "API error while sending command to %s: %s", self.name, err
+                "API error while sending command to %s: %s", self.name, str(err)
             )
         except httpx.RequestError as err:
             _LOGGER.error(
                 "Connection error while sending command to %s: %s",
-                self.name, err
+                self.name, str(err)
             )
         except Exception as err:
             _LOGGER.exception("Unexpected error while sending command to %s", self.name)
@@ -160,24 +157,35 @@ class SabianaHvacClimateEntity(ClimateEntity, RestoreEntity):
         await self._async_execute_command()
 
     async def async_set_temperature(self, **kwargs: Any) -> None:
-        if (temp := kwargs.get(ATTR_TEMPERATURE)) is not None:
-            self._attr_target_temperature = temp
+        self._attr_target_temperature = kwargs.get(ATTR_TEMPERATURE)
+        self.async_write_ha_state()
+
+        if self.hvac_mode != HVACMode.OFF and self._attr_target_temperature is not None:
             await self._async_execute_command()
 
     async def async_set_fan_mode(self, fan_mode: str) -> None:
         self._attr_fan_mode = fan_mode
-        await self._async_execute_command()
+        self.async_write_ha_state()
+
+        if self.hvac_mode != HVACMode.OFF:
+            await self._async_execute_command()
         
     async def async_set_swing_mode(self, swing_mode: str) -> None:
         self._attr_swing_mode = swing_mode
-        await self._async_execute_command()
+        self.async_write_ha_state()
+
+        if self.hvac_mode != HVACMode.OFF:
+            await self._async_execute_command()
 
     async def async_set_preset_mode(self, preset_mode: str | None) -> None:
         self._attr_preset_mode = preset_mode
-        await self._async_execute_command()
+        self.async_write_ha_state()
+
+        if self.hvac_mode != HVACMode.OFF:
+            await self._async_execute_command()
 
     async def async_turn_on(self) -> None:
-        await self.async_set_hvac_mode(HVACMode.COOL)
+        await self.async_set_hvac_mode(HVACMode.FAN_ONLY)
 
     async def async_turn_off(self) -> None:
         await self.async_set_hvac_mode(HVACMode.OFF)

@@ -2,6 +2,9 @@ import httpx
 import logging
 from dataclasses import dataclass
 from typing import Dict, Any, List, Optional
+from httpx_retries import Retry, RetryTransport
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.httpx_client import create_async_httpx_client
 from .const import BASE_URL, USER_AGENT
 
 _LOGGER = logging.getLogger(__name__)
@@ -80,6 +83,12 @@ def extract_devices(data: Dict[str, Any]) -> List[SabianaDevice]:
 
 def extract_result(data: Dict[str, Any]) -> bool:
     return data.get("body", {}).get("result", False)
+
+def create_session_client(hass: HomeAssistant) -> httpx.AsyncClient:
+    base_client = create_async_httpx_client(hass, timeout=5.0)
+    retry = Retry(total=3, backoff_factor=0.5)
+    base_client._transport = RetryTransport(transport=base_client._transport, retry=retry)
+    return base_client
 
 async def async_authenticate(session: httpx.AsyncClient, email: str, password: str) -> str:
     url = f"{BASE_URL}/users/login"

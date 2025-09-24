@@ -6,9 +6,9 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.httpx_client import get_async_client
 
 from . import api
+from .api import create_session_client
 from .const import DOMAIN, CONF_TOKEN
 
 _LOGGER = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.error("Missing token in configuration for entry %s", entry.entry_id)
         return False
     
-    session = get_async_client(hass)
+    session = create_session_client(hass)
     token = entry.data[CONF_TOKEN]
 
     try:
@@ -30,16 +30,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         devices = await api.async_get_devices(session, token)
         _LOGGER.info("Successfully retrieved %d devices from Sabiana API", len(devices))
     except api.SabianaApiAuthError as err:
-        _LOGGER.warning("Authentication failed for entry %s: %s", entry.entry_id, err)
+        _LOGGER.warning("Authentication failed for entry %s: %s", entry.entry_id, str(err))
         return False
     except api.SabianaApiClientError as err:
-        _LOGGER.error("API client error for entry %s: %s", entry.entry_id, err)
+        _LOGGER.error("API client error for entry %s: %s", entry.entry_id, str(err))
         return False
     except httpx.ConnectError as err:
-        _LOGGER.error("Connection error for entry %s: %s", entry.entry_id, err)
+        _LOGGER.error("Connection error for entry %s: %s", entry.entry_id, str(err))
         return False
     except httpx.TimeoutException as err:
-        _LOGGER.error("Timeout error for entry %s: %s", entry.entry_id, err)
+        _LOGGER.error("Timeout error for entry %s: %s", entry.entry_id, str(err))
         return False
     except Exception as err:
         _LOGGER.exception("Unexpected error during setup for entry %s: %s", entry.entry_id, err)
