@@ -1,19 +1,21 @@
 # ❄️🌡️ Sabiana HVAC Integration for Home Assistant
 
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-blue.svg)](https://github.com/hacs/integration)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/edoeel/home-assistant-sabiana-hvac)
 [![License](https://img.shields.io/github/license/edoeel/home-assistant-sabiana-hvac.svg)](LICENSE)
 <!-- [![HACS Supported](https://img.shields.io/badge/HACS-Supported-green.svg)](https://github.com/custom-components/hacs) -->
-![GitHub Activity](https://img.shields.io/github/commit-activity/y/edoeel/home-assistant-sabiana-hvac.svg?label=commits)
 <!-- [![Stable](https://img.shields.io/github/release/edoeel/home-assistant-sabiana-hvac.svg)](https://github.com/edoeel/home-assistant-sabiana-hvac/releases/latest) -->
 
 ## Table of Contents
 
 - [✨ Features](#-features)
+- [📋 Prerequisites](#-prerequisites)
 - [🚀 Installation](#-installation)
 - [⚙️ Configuration](#-configuration)
-- [📋 Prerequisites](#-prerequisites)
+- [🚧 Limitations](#-limitations)
 - [🌟 Upcoming Features](#-upcoming-features)
-- [🤝 Contributing](#contributing)
 - [⚠️ Disclaimer & Legal Notice](#️-disclaimer--legal-notice)
+- [🤝 Contributing](#contributing)
 - [❓ Support](#support)
 - [📄 License](#license)
 
@@ -25,9 +27,20 @@ Home Assistant custom integration designed to interface with Sabiana HVAC system
 *   **🔐 Secure API Authentication:** Utilizes secure, token-based authentication with the official Sabiana cloud API. User credentials (email and password) are securely stored exclusively on your local Home Assistant instance and are used solely for direct authentication with Sabiana servers.
 *   **🖥️ Native Home Assistant UI Integration:** Devices are exposed as standard Home Assistant climate entities, enabling full control and monitoring through the native user interface, automations, and scripts.
 
+## 📋 Prerequisites
+
+*   **Home Assistant Instance:** A fully operational Home assistant installation.
+*   **HACS:** [Home Assistant Community Store](https://hacs.xyz/) is highly recommended for simplified installation and updates of this custom integration.
+*   **Sabiana Account:** A valid user account registered with the official Sabiana mobile application.
+*   **Pre-Paired Devices:** Ensure your Sabiana HVAC devices are already paired and configured via the official Sabiana WiFi or Sabiana BLE mobile application. This integration leverages the existing cloud infrastructure for device communication.
+
 ## 🚀 Installation
 
-### HACS (Home Assistant Community Store) - Recommended
+### HACS (Home Assistant Community Store) - Automatic install - Recommended
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=edoeel&repository=home-assistant-sabiana-hvac&category=Integration)
+
+### HACS (Home Assistant Community Store) - Manual install
 
 1.  Navigate to HACS within your Home Assistant instance.
 2.  Select "Integrations" from the sidebar.
@@ -46,21 +59,15 @@ Home Assistant custom integration designed to interface with Sabiana HVAC system
 4.  You will be prompted to enter your Sabiana account credentials (email and password). These are used to establish a secure connection with the Sabiana cloud API.
 5.  Follow the on-screen wizard to complete the setup process, which includes device discovery.
 
-## 📋 Prerequisites
+## 🚧 Limitations
 
-*   **Home Assistant Instance:** A fully operational Home Assistant installation.
-*   **HACS:** [Home Assistant Community Store](https://hacs.xyz/) is highly recommended for simplified installation and updates of this custom integration.
-*   **Sabiana Account:** A valid user account registered with the official Sabiana mobile application.
-*   **Pre-Paired Devices:** Ensure your Sabiana HVAC devices are already paired and configured via the official Sabiana WiFi or Sabiana BLE mobile application. This integration leverages the existing cloud infrastructure for device communication.
+*   **Supported Devices**: Currently, this integration has been tested and confirmed to work exclusively with **Sabiana Carisma Fly** models. Support for other models may be added in future updates.
+*   **Version Status**: This integration is currently in **Beta** phase. While functional, users may encounter bugs or unexpected behavior. Caution is advised for use in production environments, and bug reports are highly encouraged.
 
 ## 🌟 Upcoming Features
 
 *   **Polling for Real-time State:** Implementation of a polling mechanism to retrieve and update the real-time operational state of each device. Currently, the device state is managed optimistically, meaning Home Assistant reflects the last commanded state rather than the actual device state.
 *   **Automatic Token Refresh:** Introduction of an automatic process for refreshing the authentication token. The current token has a validity period of approximately 6 months, requiring manual re-authentication upon expiration.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## ⚠️ Disclaimer & Legal Notice
 > **Important**: This integration is an independent project and is **not affiliated with, authorized, maintained, sponsored, or endorsed by Sabiana S.p.A.** or any of its affiliates or subsidiaries.
@@ -84,6 +91,10 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ### 📝 Trademark Notice
 
 All product names, logos, and registered trademarks are property of their respective owners. The use of the "Sabiana" name is for identification purposes only.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## ❓ Support
 
