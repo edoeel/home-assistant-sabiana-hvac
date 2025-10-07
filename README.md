@@ -1,3 +1,8 @@
+⚠️ This repository will be archived in the near future. Please go to https://github.com/edoeel/homeassistant-sabiana-hvac
+
+---
+
+
 # ❄️🌡️ Sabiana HVAC Integration for Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-blue.svg)](https://github.com/hacs/integration)
